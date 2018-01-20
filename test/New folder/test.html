@@ -1,0 +1,116 @@
+<html>
+<head>
+
+<style type="text/css">
+table, td{
+border:#eee thin solid;	
+border-collapse: collapse;
+vertical-align: top;
+padding: 15px;
+}
+
+table thead{
+font-weight: bold;
+font-size: 22px;
+background-color: #5499C7;
+color: #ffffff;	
+}
+
+.featured_div{
+    margin-top: 50px;
+}
+
+.featured_table_head{
+font-weight: bold;
+font-size: 22px;
+background-color: #5499C7;
+color: #ffffff; 
+
+}
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $.getJSON("https://mytoch.com/api/v5/mobile/home/app/Vk34ELr9e-EyA_8MUnl", function(result){
+            $.each(result, function(){
+                //var image_url = null;
+                
+                var tabledata = '<h1>'+ result.categories['title']+ '</h1>';
+
+                	tabledata +='<h2>'+ result.categories['subtitle']+ '</h2>'; 
+
+                	tabledata += '<table width="100%">';
+
+                tabledata += '<thead><td>Title</td><td>Sub Title</td><td>Image URL</td><td>Order ID</td><td>Video Count</td></thead>';
+
+                	for(var i=0; i< result.categories['data'].length; i++ ){
+                       // var test = "bfgdgdfdgd";
+                        var image_url = ""+result.categories['data'][i]['imageUrl']+"";
+
+                        
+                		
+                		tabledata += '<tr>';
+                		tabledata += '<td>' + result.categories['data'][i]['name'] + '</td>';
+                		tabledata += '<td>' + result.categories['data'][i]['subTitle'] + '</td>';
+                         if(image_url.indexOf("uploads") >= 0){
+                            var new_image_url = "https://mytoch.com/"+image_url;
+                            console.log(new_image_url);
+                            tabledata += '<td> <img src="' + new_image_url + '"height="150" width="300"></td>';
+                        }else{
+                           tabledata += '<td> <img src="' + image_url + '"height="150" width="300"></td>';
+                        }
+                		
+                		tabledata += '<td>' + result.categories['data'][i]['orderid'] + '</td>';
+                		tabledata += '<td>' + result.categories['data'][i]['videoCount'] + '</td>';
+                		tabledata += '</tr>';
+                	}
+
+
+                	tabledata += '</table>';		
+
+                $("div").html(tabledata);
+                //=================End For Catagories............
+                //=================Start for features..............
+
+                var featured_table = '<h1>featured Data </h1><br><table width="100%" id="featured_table">';
+                featured_table = '<thead class="featured_table_head"><td>ID</td><td>Title</td><td>category_title</td><td>isVimeo</td><td>shortId</td><td>videoLink</td><td>videoThumbLink</td><td>tags</td><td>viewCount</td><td>appId</td><td>Show_gif_Image</td></thead>';
+
+                           for(var i=0;i<result.featured.length;i++){
+                        featured_table += '<tr>';
+                        featured_table += '<td>' + result.featured[i]['_id'] + '</td>';
+                        featured_table += '<td>' + result.featured[i]['title'] + '</td>';
+                        featured_table += '<td>' + result.featured[i]['category_title'] + '</td>';
+                        featured_table += '<td>' + result.featured[i]['isVimeo'] + '</td>';
+                        featured_table += '<td>' + result.featured[i]['shortId'] + '</td>';
+         featured_table += '<td><video width="300" height="150" controls> <source src="' + result.featured[i]['videoLink'] + '" type="video/mp4"></video></td>';
+                        featured_table += '<td> <img src="' + result.featured[i]['videoThumbLink'] + '"height="150" width="300"></td>';
+                        featured_table += '<td>' + result.featured[i]['tags'] + '</td>';
+                        featured_table += '<td>' + result.featured[i]['viewCount'] + '</td>';
+                        featured_table += '<td>' + result.featured[i]['appId'] + '</td>';
+                        featured_table += '<td>' + result.featured[i]['Show_gif_Image'] + '</td>';
+                        featured_table += '</tr>';           
+            }
+                featured_table+= '</table>';
+                $("#featured_table_data").html(featured_table);
+                 //=================End For featured_table............
+            	
+            });
+        });
+    });
+});
+</script>
+</head>
+<body>
+
+<button>Get JSON data</button>
+
+<div></div>
+
+
+<div id="featured_table_data" class="featured_div"></div>
+
+</body>
+</html>
+
